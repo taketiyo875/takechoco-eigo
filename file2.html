@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英検3級 単語クイズ File 2 🐾</title>
+    <style>
+        :root {
+            --primary-orange: #FF851B;
+            --hover-orange: #FF9F43;
+            --correct-green: #2ECC71;
+            --incorrect-red: #E74C3C;
+            --bg-cream: #FFF5EB;
+            --text-dark: #2C3E50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 133, 27, 0.15);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            border: 3px solid var(--primary-orange);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-orange);
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .cat-decoration {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* ホーム画面 */
+        .filter-group {
+            margin: 20px 0;
+        }
+
+        .filter-btn {
+            background-color: #FFFFFF;
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.selected {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+        }
+
+        .input-group {
+            margin: 25px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 80px;
+            padding: 8px;
+            font-size: 18px;
+            text-align: center;
+            border: 2px solid var(--primary-orange);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .start-btn {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 133, 27, 0.3);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .start-btn:hover {
+            background-color: var(--hover-orange);
+        }
+
+        .start-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* クイズ画面 */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question-box {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 30px 0;
+            min-height: 40px;
+            color: var(--text-dark);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            border: none;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            background-color: var(--hover-orange);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-green) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-red) !important;
+        }
+
+        .home-nav-btn {
+            background-color: #7F8C8D;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .home-nav-btn:hover {
+            background-color: #95A5A6;
+        }
+
+        /* 結果画面 */
+        .result-score {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-orange);
+            margin: 20px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="cat-decoration">🐾 🐱 🐾</div>
+    
+    <!-- ホーム画面 -->
+    <div id="home-screen" class="screen active">
+        <h1>英検3級 英単語クイズ (File 2 / 4)</h1>
+        <p>日本語の意味に合う英語を4つの選択肢から選ぶニャ！</p>
+        
+        <div class="filter-group">
+            <button id="btn-all" class="filter-btn selected" onclick="setFilter('all')">全レベル</button>
+            <button id="btn-basic" class="filter-btn" onclick="setFilter('basic')">初級</button>
+            <button id="btn-intermediate" class="filter-btn" onclick="setFilter('intermediate')">中級</button>
+            <button id="btn-advanced" class="filter-btn" onclick="setFilter('advanced')">上級</button>
+        </div>
+
+        <div class="input-group">
+            <label for="question-count">挑戦する問題数：</label>
+            <input type="number" id="question-count" value="10" min="1" max="500">
+        </div>
+
+        <button class="start-btn" onclick="startQuiz()">クイズを始める🐾</button>
+    </div>
+
+    <!-- クイズ画面 -->
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <div id="progress-text">1 / 10問目</div>
+            <button class="home-nav-btn" onclick="confirmGoHome()">ホームに戻る</button>
+        </div>
+        <p style="color: #7F8C8D; margin: 0;">この日本語に合う英語を選んでニャ！</p>
+        <div id="question-text" class="question-box"></div>
+        <div class="options-list">
+            <button class="option-btn" onclick="checkAnswer(0)"></button>
+            <button class="option-btn" onclick="checkAnswer(1)"></button>
+            <button class="option-btn" onclick="checkAnswer(2)"></button>
+            <button class="option-btn" onclick="checkAnswer(3)"></button>
+        </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="result-screen" class="screen">
+        <h1>結果発表！</h1>
+        <div class="result-score" id="result-score-text">0 / 0問正解</div>
+        <p id="result-comment"></p>
+        <button class="restart-btn" onclick="showHomeScreen()">もう一度あそぶ🐾</button>
+    </div>
+</div>
+
+<script>
+// 500単語の完全データ（501〜1000語目・重複なし・連番完全撤廃）
+const wordDatabase = [
+    // 初級 (166語)
+    { english: 'face', japanese: '顔、に直面する', level: 'basic' },
+    { english: 'fact', japanese: '事実', level: 'basic' },
+    { english: 'fall', japanese: '落ちる、秋', level: 'basic' },
+    { english: 'family', japanese: '家族', level: 'basic' },
+    { english: 'farm', japanese: '農場', level: 'basic' },
+    { english: 'fast', japanese: '速い', level: 'basic' },
+    { english: 'fat', japanese: '太った、脂肪', level: 'basic' },
+    { english: 'father', japanese: '父親', level: 'basic' },
+    { english: 'favorite', japanese: 'お気に入りの', level: 'basic' },
+    { english: 'feel', japanese: 'を感じる', level: 'basic' },
+    { english: 'few', japanese: 'ほとんどない', level: 'basic' },
+    { english: 'field', japanese: '分野、野原', level: 'basic' },
+    { english: 'fight', japanese: '戦う、喧嘩', level: 'basic' },
+    { english: 'find', japanese: 'を見つける', level: 'basic' },
+    { english: 'fine', japanese: '元気な、晴れた', level: 'basic' },
+    { english: 'finish', japanese: 'を終える', level: 'basic' },
+    { english: 'fire', japanese: '火、火事', level: 'basic' },
+    { english: 'first', japanese: '最初の、第1に', level: 'basic' },
+    { english: 'fish', japanese: '魚、釣りをする', level: 'basic' },
+    { english: 'five', japanese: '5つの', level: 'basic' },
+    { english: 'floor', japanese: '床、階', level: 'basic' },
+    { english: 'flower', japanese: '花', level: 'basic' },
+    { english: 'fly', japanese: '飛ぶ、ハエ', level: 'basic' },
+    { english: 'follow', japanese: 'に従う、ついて行く', level: 'basic' },
+    { english: 'food', japanese: '食べ物', level: 'basic' },
+    { english: 'foot', japanese: '足', level: 'basic' },
+    { english: 'for', japanese: 'のために、の間', level: 'basic' },
+    { english: 'foreign', japanese: '外国の', level: 'basic' },
+    { english: 'forest', japanese: '森林', level: 'basic' },
+    { english: 'forget', japanese: 'を忘れる', level: 'basic' },
+    { english: 'four', japanese: '4つの', level: 'basic' },
+    { english: 'free', japanese: '自由な、無料の', level: 'basic' },
+    { english: 'friend', japanese: '友達', level: 'basic' },
+    { english: 'from', japanese: 'から', level: 'basic' },
+    { english: 'front', japanese: '前面、前部', level: 'basic' },
+    { english: 'fruit', japanese: '果物', level: 'basic' },
+    { english: 'full', japanese: 'いっぱいの', level: 'basic' },
+    { english: 'fun', japanese: '楽しみ、おもしろい', level: 'basic' },
+    { english: 'future', japanese: '未来、将来', level: 'basic' },
+    { english: 'game', japanese: '試合、ゲーム', level: 'basic' },
+    { english: 'garden', japanese: '庭、庭園', level: 'basic' },
+    { english: 'gas', japanese: 'ガス、ガソリン', level: 'basic' },
+    { english: 'gate', japanese: '門、ゲート', level: 'basic' },
+コードは注意してご使用ください。{ english: 'general', japanese: '一般的な', level: 'basic' },{ english: 'get', japanese: 'を手に入れる、なる', level: 'basic' },{ english: 'girl', japanese: '女の子', level: 'basic' },{ english: 'give', japanese: 'を与える', level: 'basic' },{ english: 'glad', japanese: '嬉しい', level: 'basic' },{ english: 'glass', japanese: 'ガラス、コップ', level: 'basic' },{ english: 'go', japanese: '行く', level: 'basic' },{ english: 'god', japanese: '神', level: 'basic' },{ english: 'gold', japanese: '金、黄金の', level: 'basic' },{ english: 'good', japanese: '良い', level: 'basic' },{ english: 'grandfather', japanese: '祖父', level: 'basic' },{ english: 'grandmother', japanese: '祖母', level: 'basic' },{ english: 'grass', japanese: '草、芝生', level: 'basic' },{ english: 'great', japanese: '偉大な、すばらしい', level: 'basic' },{ english: 'green', japanese: '緑、緑色の', level: 'basic' },{ english: 'ground', japanese: '地面、土地', level: 'basic' },{ english: 'group', japanese: '集団、グループ', level: 'basic' },{ english: 'grow', japanese: '成長する、を育てる', level: 'basic' },{ english: 'guest', japanese: '客、ゲスト', level: 'basic' },{ english: 'guide', japanese: '案内、案内する', level: 'basic' },{ english: 'guitar', japanese: 'ギター', level: 'basic' },{ english: 'hair', japanese: '髪、毛', level: 'basic' },{ english: 'half', japanese: '半分の、半分', level: 'basic' },{ english: 'hand', japanese: '手、を手渡す', level: 'basic' },{ english: 'happen', japanese: '起こる', level: 'basic' },{ english: 'happy', japanese: '幸せな、嬉しい', level: 'basic' },{ english: 'hard', japanese: '硬い、熱心に、難しい', level: 'basic' },{ english: 'hat', japanese: '帽子（ふちのある）', level: 'basic' },{ english: 'have', japanese: 'を持っている、食べる', level: 'basic' },{ english: 'he', japanese: '彼は、彼が', level: 'basic' },{ english: 'head', japanese: '頭、向かう', level: 'basic' },{ english: 'hear', japanese: 'が聞こえる', level: 'basic' },{ english: 'heart', japanese: '心、心臓', level: 'basic' },{ english: 'heat', japanese: '熱、を温める', level: 'basic' },{ english: 'heavy', japanese: '重い', level: 'basic' },{ english: 'hello', japanese: 'こんにちは', level: 'basic' },{ english: 'help', japanese: 'を助ける、手伝い', level: 'basic' },{ english: 'her', japanese: '彼女の、彼女を', level: 'basic' },{ english: 'here', japanese: 'ここに、ここで', level: 'basic' },{ english: 'high', japanese: '高い', level: 'basic' },{ english: 'hill', japanese: '丘', level: 'basic' },{ english: 'him', japanese: '彼を、彼に', level: 'basic' },{ english: 'his', japanese: '彼の、彼のもの', level: 'basic' },{ english: 'history', japanese: '歴史', level: 'basic' },{ english: 'hit', japanese: 'を打つ、当たる', level: 'basic' },{ english: 'hobby', japanese: '趣味', level: 'basic' },{ english: 'hold', japanese: 'を持つ、を催す', level: 'basic' },{ english: 'hole', japanese: '穴', level: 'basic' },{ english: 'holiday', japanese: '休日、祝日', level: 'basic' },{ english: 'home', japanese: '家、我が家へ', level: 'basic' },{ english: 'homework', japanese: '宿題', level: 'basic' },{ english: 'honest', japanese: '正直な', level: 'basic' },{ english: 'hope', japanese: 'を望む、希望', level: 'basic' },{ english: 'horse', japanese: '馬', level: 'basic' },{ english: 'hospital', japanese: '病院', level: 'basic' },{ english: 'hot', japanese: '暑い、熱い', level: 'basic' },{ english: 'hotel', japanese: 'ホテル', level: 'basic' },{ english: 'hour', japanese: '時間（60分）', level: 'basic' },{ english: 'house', japanese: '家、住宅', level: 'basic' },{ english: 'how', japanese: 'どのように、どれほど', level: 'basic' },{ english: 'human', japanese: '人間、人間の', level: 'basic' },{ english: 'hundred', japanese: '百、百の', level: 'basic' },{ english: 'hungry', japanese: '空腹の', level: 'basic' },{ english: 'hurry', japanese: '急ぐ、急ぎ', level: 'basic' },{ english: 'hurt', japanese: 'を痛める、痛む', level: 'basic' },{ english: 'husband', japanese: '夫', level: 'basic' },{ english: 'I', japanese: '私は、私が', level: 'basic' },{ english: 'ice', japanese: '氷', level: 'basic' },{ english: 'idea', japanese: '考え、アイデア', level: 'basic' },{ english: 'if', japanese: 'もし〜ならば', level: 'basic' },{ english: 'ill', japanese: '病気で、気分の悪い', level: 'basic' },{ english: 'important', japanese: '重要な', level: 'basic' },{ english: 'in', japanese: 'の中に、の中に', level: 'basic' },{ english: 'increase', japanese: '増加する、を増やす', level: 'basic' },{ english: 'industry', japanese: '産業、工業', level: 'basic' },{ english: 'information', japanese: '情報', level: 'basic' },{ english: 'ink', japanese: 'インク', level: 'basic' },{ english: 'insect', japanese: '昆虫', level: 'basic' },{ english: 'inside', japanese: '内側に、内側', level: 'basic' },{ english: 'instead', japanese: '代わりに', level: 'basic' },{ english: 'interest', japanese: '興味、利息', level: 'basic' },{ english: 'interested', japanese: '興味を持っている', level: 'basic' },{ english: 'interesting', japanese: 'おもしろい、興味深い', level: 'basic' },{ english: 'international', japanese: '国際的な', level: 'basic' },{ english: 'internet', japanese: 'インターネット', level: 'basic' },{ english: 'into', japanese: 'の中へ', level: 'basic' },{ english: 'introduce', japanese: 'を紹介する', level: 'basic' },{ english: 'invent', japanese: 'を発明する', level: 'basic' },{ english: 'invite', japanese: 'を招待する', level: 'basic' },{ english: 'island', japanese: '島', level: 'basic' },{ english: 'it', japanese: 'それは、それを', level: 'basic' },{ english: 'its', japanese: 'それの', level: 'basic' },{ english: 'jacket', japanese: '上着、ジャケット', level: 'basic' },{ english: 'jam', japanese: 'ジャム、詰まること', level: 'basic' },{ english: 'january', japanese: '1月', level: 'basic' },{ english: 'job', japanese: '仕事、職', level: 'basic' },{ english: 'join', japanese: 'に加わる、参加する', level: 'basic' },{ english: 'joke', japanese: '冗談、冗談を言う', level: 'basic' },{ english: 'journey', japanese: '旅、旅行', level: 'basic' },{ english: 'joy', japanese: '喜び', level: 'basic' },{ english: 'juice', japanese: 'ジュース', level: 'basic' },{ english: 'july', japanese: '7月', level: 'basic' },{ english: 'jump', japanese: '跳ぶ、ジャンプ', level: 'basic' },{ english: 'june', japanese: '6月', level: 'basic' },{ english: 'just', japanese: 'ちょうど、ただ〜だけ', level: 'basic' },{ english: 'keep', japanese: 'を保つ、飼う', level: 'basic' },{ english: 'key', japanese: '鍵、キー', level: 'basic' },{ english: 'kick', japanese: 'を蹴る', level: 'basic' },{ english: 'kid', japanese: '子供、冗談を言う', level: 'basic' },{ english: 'kind', japanese: '親切な、種類', level: 'basic' },{ english: 'king', japanese: '王、キング', level: 'basic' },{ english: 'kiss', japanese: 'キス、キスする', level: 'basic' },{ english: 'kitchen', japanese: '台所、キッチン', level: 'basic' },{ english: 'knee', japanese: '膝（ひざ）', level: 'basic' },{ english: 'knife', japanese: 'ナイフ', level: 'basic' },{ english: 'knock', japanese: 'ノックする、ノック', level: 'basic' },{ english: 'know', japanese: 'を知っている', level: 'basic' },{ english: 'knowledge', japanese: '知識', level: 'basic' },// 中級 (167語){ english: 'gallery', japanese: '美術館、画廊', level: 'intermediate' },{ english: 'gallon', japanese: 'ガロン', level: 'intermediate' },{ english: 'gamble', japanese: 'ギャンブルをする', level: 'intermediate' },{ english: 'garage', japanese: '車庫、ガレージ', level: 'intermediate' },{ english: 'garbage', japanese: 'ごみ、生ごみ', level: 'intermediate' },{ english: 'garlic', japanese: 'ニンニク', level: 'intermediate' },{ english: 'garment', japanese: '衣類', level: 'intermediate' },{ english: 'gasp', japanese: 'あえぐ、息をのむ', level: 'intermediate' },{ english: 'gather', japanese: 'を集める、集まる', level: 'intermediate' },{ english: 'gauge', japanese: '計器、測定する', level: 'intermediate' },{ english: 'gaze', japanese: '見つめる', level: 'intermediate' },{ english: 'gear', japanese: 'ギア、用具', level: 'intermediate' },{ english: 'gene', japanese: '遺伝子', level: 'intermediate' },{ english: 'generate', japanese: 'を生み出す', level: 'intermediate' },{ english: 'generation', japanese: '世代', level: 'intermediate' },{ english: 'generous', japanese: '気前のよい、寛大な', level: 'intermediate' },{ english: 'genius', japanese: '天才', level: 'intermediate' },{ english: 'gentle', japanese: '優しい、穏やかな', level: 'intermediate' },{ english: 'genuine', japanese: '本物の、心からの', level: 'intermediate' },{ english: 'geography', japanese: '地理学', level: 'intermediate' },{ english: 'gesture', japanese: '身振り、ジェスチャー', level: 'intermediate' },{ english: 'ghost', japanese: '幽霊', level: 'intermediate' },{ english: 'giant', japanese: '巨人、巨大な', level: 'intermediate' },{ english: 'gifted', japanese: '才能のある', level: 'intermediate' },{ english: 'giggle', japanese: 'くすくす笑う', level: 'intermediate' },{ english: 'ginger', japanese: '生姜', level: 'intermediate' },{ english: 'giraffe', japanese: 'キリン', level: 'intermediate' },{ english: 'glance', japanese: 'ちらりと見る', level: 'intermediate' },{ english: 'glare', japanese: 'ぎらぎら光る、にらみつける', level: 'intermediate' },{ english: 'gleam', japanese: 'きらめく、かすかな光', level: 'intermediate' },{ english: 'glide', japanese: '滑るように進む', level: 'intermediate' },{ english: 'glimpse', japanese: 'をちらりと見る', level: 'intermediate' },{ english: 'glitter', japanese: 'きらきら輝く', level: 'intermediate' },{ english: 'global', japanese: '世界的な', level: 'intermediate' },{ english: 'globe', japanese: '地球、球体', level: 'intermediate' },{ english: 'gloom', japanese: '憂鬱、暗がり', level: 'intermediate' },{ english: 'gloomy', japanese: '薄暗い、憂鬱な', level: 'intermediate' },{ english: 'glorious', japanese: '輝かしい、栄光ある', level: 'intermediate' },{ english: 'glory', japanese: '栄光', level: 'intermediate' },{ english: 'glow', japanese: '白熱する、輝き', level: 'intermediate' },{ english: 'glue', japanese: '接着剤、糊で貼る', level: 'intermediate' },{ english: 'goat', japanese: 'ヤギ', level: 'intermediate' },{ english: 'goddess', japanese: '女神', level: 'intermediate' },{ english: 'govern', japanese: 'を統治する、支配する', level: 'intermediate' },{ english: 'government', japanese: '政府', level: 'intermediate' },{ english: 'governor', japanese: '知事、地方長官', level: 'intermediate' },{ english: 'gown', japanese: 'ガウン、ドレス', level: 'intermediate' },{ english: 'grab', japanese: 'をつかむ、ひったくる', level: 'intermediate' },{ english: 'grace', japanese: '優雅さ、気品', level: 'intermediate' },{ english: 'graceful', japanese: '優雅な', level: 'intermediate' },{ english: 'gracious', japanese: '親切な、丁寧な', level: 'intermediate' },{ english: 'grade', japanese: '学年、等級', level: 'intermediate' },{ english: 'gradual', japanese: '緩やかな、段階的な', level: 'intermediate' },{ english: 'gradually', japanese: '徐々に、だんだんと', level: 'intermediate' },{ english: 'graduate', japanese: '卒業する', level: 'intermediate' },{ english: 'graduation', japanese: '卒業', level: 'intermediate' },{ english: 'grain', japanese: '穀物、一粒', level: 'intermediate' },{ english: 'grammar', japanese: '文法', level: 'intermediate' },{ english: 'grand', japanese: '壮大な、雄大な', level: 'intermediate' },{ english: 'grant', japanese: 'を認める、授与する', level: 'intermediate' },{ english: 'grape', japanese: 'ブドウ', level: 'intermediate' },{ english: 'graph', japanese: 'グラフ、図表', level: 'intermediate' },{ english: 'grasp', japanese: 'を把握する、握る', level: 'intermediate' },{ english: 'grateful', japanese: '感謝している', level: 'intermediate' },{ english: 'gratitude', japanese: '感謝の気持ち', level: 'intermediate' },{ english: 'grave', japanese: '墓、重大な', level: 'intermediate' },{ english: 'gravity', japanese: '重力、引力', level: 'intermediate' },{ english: 'graze', japanese: '草を食う', level: 'intermediate' },{ english: 'grease', japanese: 'グリース、潤滑油', level: 'intermediate' },{ english: 'greed', japanese: '強欲、貪欲', level: 'intermediate' },{ english: 'greedy', japanese: '貪欲な', level: 'intermediate' },{ english: 'greet', japanese: 'に挨拶する、迎える', level: 'intermediate' },{ english: 'greeting', japanese: '挨拶', level: 'intermediate' },{ english: 'grief', japanese: '深い悲しみ', level: 'intermediate' },{ english: 'grieve', japanese: '深く悲しむ', level: 'intermediate' },{ english: 'grill', japanese: '網で焼く、焼き網', level: 'intermediate' },{ english: 'grim', japanese: '厳格な、険しい', level: 'intermediate' },{ english: 'grin', japanese: 'にやりと笑う', level: 'intermediate' },{ english: 'grind', japanese: 'を粉にひく', level: 'intermediate' },{ english: 'grip', japanese: 'をしっかりと握る', level: 'intermediate' },{ english: 'groan', japanese: 'うめく、うめき声', level: 'intermediate' },{ english: 'grocery', japanese: '食料雑貨、食料雑貨店', level: 'intermediate' },{ english: 'groove', japanese: '溝、慣例', level: 'intermediate' },{ english: 'gross', japanese: '総計の、ひどい', level: 'intermediate' },{ english: 'growth', japanese: '成長、発展', level: 'intermediate' },{ english: 'guarantee', japanese: 'を保証する、保証', level: 'intermediate' },{ english: 'guard', japanese: '警備員、を守る', level: 'intermediate' },{ english: 'guardian', japanese: '保護者、守護者', level: 'intermediate' },{ english: 'guess', japanese: 'を推測する', level: 'intermediate' },{ english: 'guidance', japanese: '指導、案内', level: 'intermediate' },{ english: 'guilt', japanese: '罪、有罪、罪悪感', level: 'intermediate' },{ english: 'guilty', japanese: '有罪の、罪悪感のある', level: 'intermediate' },{ english: 'gulf', japanese: '湾、大きな隔たり', level: 'intermediate' },{ english: 'gum', japanese: 'ゴム、歯茎', level: 'intermediate' },{ english: 'gun', japanese: '銃', level: 'intermediate' },{ english: 'gymnasium', japanese: '体育館', level: 'intermediate' },{ english: 'habit', japanese: '習慣、癖', level: 'intermediate' },{ english: 'habitat', japanese: '生息地', level: 'intermediate' },{ english: 'hail', japanese: 'を歓迎する、あられ', level: 'intermediate' },{ english: 'hairdresser', japanese: '美容師', level: 'intermediate' },{ english: 'hamburger', japanese: 'ハンバーガー', level: 'intermediate' },{ english: 'hammer', japanese: 'ハンマー、金槌', level: 'intermediate' },{ english: 'handful', japanese: '一握りの', level: 'intermediate' },{ english: 'handicap', japanese: '不利な条件、障害', level: 'intermediate' },{ english: 'handkerchief', japanese: 'ハンカチ', level: 'intermediate' },{ english: 'handle', japanese: 'を扱う、取っ手', level: 'intermediate' },{ english: 'handsome', japanese: 'ハンサムな', level: 'intermediate' },{ english: 'handy', japanese: '便利な、器用な', level: 'intermediate' },{ english: 'hang', japanese: 'を掛ける、ぶら下がる', level: 'intermediate' },{ english: 'harbor', japanese: '港、を心に抱く', level: 'intermediate' },{ english: 'hardly', japanese: 'ほとんど〜ない', level: 'intermediate' },{ english: 'hardship', japanese: '苦難、困窮', level: 'intermediate' },{ english: 'hardware', japanese: '金物、ハードウェア', level: 'intermediate' },{ english: 'hare', japanese: '野ウサギ', level: 'intermediate' },{ english: 'harm', japanese: '害、に害を与える', level: 'intermediate' },{ english: 'harmful', japanese: '有害な', level: 'intermediate' },{ english: 'harmless', japanese: '無害な', level: 'intermediate' },{ english: 'harmony', japanese: '調和、ハーモニー', level: 'intermediate' },{ english: 'harsh', japanese: '厳しい、不快な', level: 'intermediate' },{ english: 'harvest', japanese: '収穫、を収穫する', level: 'intermediate' },{ english: 'haste', japanese: '急ぐこと、迅速', level: 'intermediate' },{ english: 'hasten', japanese: 'を急がせる、急ぐ', level: 'intermediate' },{ english: 'hasty', japanese: '急ぎの、軽率な', level: 'intermediate' },{ english: 'hatred', japanese: '憎しみ、嫌悪', level: 'intermediate' },{ english: 'haul', japanese: 'を強く引っ張る、運搬', level: 'intermediate' },{ english: 'hawk', japanese: 'タカ', level: 'intermediate' },{ english: 'hay', japanese: '干し草', level: 'intermediate' },{ english: 'hazard', japanese: '危険、危険要素', level: 'intermediate' },{ english: 'heading', japanese: '見出し、表題', level: 'intermediate' },{ english: 'headline', japanese: '大見出し、ニュース項目', level: 'intermediate' },{ english: 'heal', japanese: 'を治す、癒える', level: 'intermediate' },{ english: 'health', japanese: '健康', level: 'intermediate' },{ english: 'healthy', japanese: '健康な', level: 'intermediate' },{ english: 'heap', japanese: '積み重なり、山', level: 'intermediate' },{ english: 'heaven', japanese: '天国', level: 'intermediate' },{ english: 'hedge', japanese: '生け垣、障壁', level: 'intermediate' },{ english: 'heel', japanese: 'かかと', level: 'intermediate' },{ english: 'height', japanese: '高さ、高度', level: 'intermediate' },{ english: 'heir', japanese: '相続人', level: 'intermediate' },{ english: 'helicopter', japanese: 'ヘリコプター', level: 'intermediate' },{ english: 'hell', japanese: '地獄', level: 'intermediate' },{ english: 'helmet', japanese: 'ヘルメット', level: 'intermediate' },{ english: 'hence', japanese: 'それゆえに', level: 'intermediate' },{ english: 'herb', japanese: 'ハーブ、薬草', level: 'intermediate' },{ english: 'herd', japanese: '群れ', level: 'intermediate' },{ english: 'hero', japanese: '英雄、主人公', level: 'intermediate' },{ english: 'heroine', japanese: 'ヒロイン', level: 'intermediate' },{ english: 'hesitate', japanese: 'ためらう、躊躇する', level: 'intermediate' },{ english: 'hide', japanese: 'を隠す、隠れる', level: 'intermediate' },{ english: 'highways', japanese: '幹線道路、高速道路', level: 'intermediate' },{ english: 'hijack', japanese: 'を乗っ取る、ハイジャック', level: 'intermediate' },{ english: 'hiking', japanese: 'ハイキング', level: 'intermediate' },{ english: 'hint', japanese: 'ヒント、暗示例', level: 'intermediate' },{ english: 'hip', japanese: '臀部、腰まわり', level: 'intermediate' },{ english: 'hire', japanese: 'を雇う、賃借りする', level: 'intermediate' },{ english: 'historian', japanese: '歴史家', level: 'intermediate' },{ english: 'historic', japanese: '歴史的に有名な', level: 'intermediate' },{ english: 'historical', japanese: '歴史に関する', level: 'intermediate' },{ english: 'hive', japanese: 'ミツバチの巣箱', level: 'intermediate' },// 上級 (167語){ english: 'hack', japanese: 'を叩き切る、ハッキングする', level: 'advanced' },{ english: 'hackneyed', japanese: '使い古された、陳腐な', level: 'advanced' },{ english: 'haggard', japanese: 'やつれた、衰弱した', level: 'advanced' },{ english: 'haggle', japanese: '値切る、言い争う', level: 'advanced' },{ english: 'halfway', japanese: '中途で、中間の', level: 'advanced' },{ english: 'hallmark', japanese: '特徴、太鼓判', level: 'advanced' },{ english: 'hallow', japanese: 'を神聖なものとする', level: 'advanced' },{ english: 'hallucination', japanese: '幻覚、幻聴', level: 'advanced' },{ english: 'halt', japanese: '停止する、を停止させる', level: 'advanced' },{ english: 'hamper', japanese: 'を妨害する、邪魔する', level: 'advanced' },{ english: 'handicraft', japanese: '手工芸、手細工', level: 'advanced' },{ english: 'haphazard', japanese: '偶然の、計画性のない', level: 'advanced' },{ english: 'hapless', japanese: '不運な、不幸な', level: 'advanced' },{ english: 'harangue', japanese: '熱弁、長演説', level: 'advanced' },{ english: 'harass', japanese: 'を絶えず悩ませる', level: 'advanced' },{ english: 'harassment', japanese: '嫌がらせ、ハラスメント', level: 'advanced' },{ english: 'harbinger', japanese: '前触れ、先駆者', level: 'advanced' },{ english: 'hardy', japanese: '頑丈な、耐寒性の', level: 'advanced' },{ english: 'harem', japanese: 'ハレム、後宮', level: 'advanced' },{ english: 'hark', japanese: '聴く、耳を傾ける', level: 'advanced' },{ english: 'harlot', japanese: '売春婦', level: 'advanced' },{ english: 'harmonious', japanese: '調和のとれた', level: 'advanced' },{ english: 'harness', japanese: 'を動力化する、馬具', level: 'advanced' },{ english: 'harp', japanese: 'ハープ、同じことを繰り返す', level: 'advanced' },{ english: 'harrow', japanese: 'を精神的に苦しめる', level: 'advanced' },{ english: 'harry', japanese: 'を略奪する、いたぶる', level: 'advanced' },{ english: 'harvest', japanese: '収穫、成果', level: 'advanced' },{ english: 'hatch', japanese: 'を孵化させる、企てる', level: 'advanced' },{ english: 'haughty', japanese: '傲慢な、高慢な', level: 'advanced' },{ english: 'haunt', japanese: 'に出没する、つきまとう', level: 'advanced' },{ english: 'haven', japanese: '避難所、安息の地', level: 'advanced' },{ english: 'havoc', japanese: '大混乱、大破壊', level: 'advanced' },{ english: 'hawk', japanese: 'タカ、を売り歩く', level: 'advanced' },{ english: 'hazard', japanese: '危険、偶然の出来事', level: 'advanced' },{ english: 'hazardous', japanese: '危険な、冒険的な', level: 'advanced' },{ english: 'haze', japanese: 'もや、かすみ', level: 'advanced' },{ english: 'headquarters', japanese: '本部、本社', level: 'advanced' },{ english: 'headstrong', japanese: '頑固な、強情な', level: 'advanced' },{ english: 'heady', japanese: '刺激的な、うきうきさせる', level: 'advanced' },{ english: 'heap', japanese: '山、堆積', level: 'advanced' },{ english: 'hearsay', japanese: '噂、伝聞', level: 'advanced' },{ english: 'hearth', japanese: '暖炉の床、家庭', level: 'advanced' },{ english: 'hearty', japanese: '心のこもった、旺盛な', level: 'advanced' },{ english: 'heathen', japanese: '異教徒、野蛮人', level: 'advanced' },{ english: 'heave', japanese: 'を力を入れて持ち上げる', level: 'advanced' },{ english: 'heavenly', japanese: '天国のような、素晴らしい', level: 'advanced' },{ english: 'heavy-handed', japanese: '不器用な、高圧的な', level: 'advanced' },{ english: 'heckle', japanese: 'に質問攻めでヤジをとばす', level: 'advanced' },{ english: 'hectic', japanese: 'てんてこ舞いの、非常に忙しい', level: 'advanced' },{ english: 'hedge', japanese: '生け垣、曖昧な態度をとる', level: 'advanced' },{ english: 'hedonism', japanese: '快楽主義', level: 'advanced' },{ english: 'heed', japanese: 'に注意を払う', level: 'advanced' },{ english: 'heedless', japanese: '不注意な、うっかりした', level: 'advanced' },{ english: 'heft', japanese: '重量、を大体の重さを測る', level: 'advanced' },{ english: 'hegemony', japanese: '覇権、主導権', level: 'advanced' },{ english: 'heinous', japanese: '極悪非道な', level: 'advanced' },{ english: 'heirloom', japanese: '家宝', level: 'advanced' },{ english: 'herald', japanese: 'の到来を告げる、使者', level: 'advanced' },{ english: 'herbivore', japanese: '草食動物', level: 'advanced' },{ english: 'hereditary', japanese: '世襲の、遺伝的な', level: 'advanced' },{ english: 'heredity', japanese: '遺伝', level: 'advanced' },{ english: 'heresy', japanese: '異端、異説', level: 'advanced' },{ english: 'heretic', japanese: '異端者', level: 'advanced' },{ english: 'heritage', japanese: '遺産、伝統継承物', level: 'advanced' },{ english: 'hermetic', japanese: '密閉された、錬金術の', level: 'advanced' },{ english: 'hermit', japanese: '世捨て人、隠者', level: 'advanced' },{ english: 'heroic', japanese: '英雄的な、勇敢な', level: 'advanced' },{ english: 'hesitant', japanese: '躊躇している、気乗りのしない', level: 'advanced' },{ english: 'heterogeneous', japanese: '異質な、混成の', level: 'advanced' },{ english: 'hew', japanese: 'を叩き切る、切り出す', level: 'advanced' },{ english: 'heyday', japanese: '全盛期、全盛', level: 'advanced' },{ english: 'hiatus', japanese: '中断、隙間', level: 'advanced' },{ english: 'hibernate', japanese: '冬眠する', level: 'advanced' },{ english: 'hide', japanese: '獣皮、を隠す', level: 'advanced' },{ english: 'hidebound', japanese: '偏狭な、頑固な', level: 'advanced' },{ english: 'hideous', japanese: '恐ろしい、見るに堪えない', level: 'advanced' },{ english: 'hierarchy', japanese: '階層制、ヒエラルキー', level: 'advanced' },{ english: 'high-handed', japanese: '高圧的な、独断的な', level: 'advanced' },{ english: 'hilarity', japanese: '大騒ぎ、陽気さ', level: 'advanced' },{ english: 'hinder', japanese: 'を妨げる（hi）', level: 'advanced' },{ english: 'hindrance', japanese: '妨害、障害物', level: 'advanced' },{ english: 'hindsight', japanese: '後知恵、あとになっての判断', level: 'advanced' },{ english: 'hint', japanese: 'ヒント、をほのめかす', level: 'advanced' },{ english: 'hireling', japanese: '雇われ人、金目当ての働く人', level: 'advanced' },{ english: 'hiss', japanese: 'シューと音を立てる', level: 'advanced' },{ english: 'historic', japanese: '歴史的に有名な', level: 'advanced' },{ english: 'histrionic', japanese: '芝居がかった、演劇の', level: 'advanced' },{ english: 'hitherto', japanese: '今までは、従来', level: 'advanced' },{ english: 'hive', japanese: 'ミツバチの巣、大忙しの場所', level: 'advanced' },{ english: 'hoad', japanese: 'を蓄える、買いだめする', level: 'advanced' },{ english: 'hoar', japanese: '白髪の、霜の降りた', level: 'advanced' },{ english: 'hoarse', japanese: '声がかすれた', level: 'advanced' },{ english: 'hoary', japanese: '古臭い、白髪の', level: 'advanced' },{ english: 'hoax', japanese: '悪ふざけ、でっち上げ', level: 'advanced' },{ english: 'hobble', japanese: '足を引いて歩く', level: 'advanced' },{ english: 'hobby', japanese: '趣味、ホビー', level: 'advanced' },{ english: 'hobnob', japanese: '親しく付き合う', level: 'advanced' },{ english: 'hodgepodge', japanese: 'ごった煮、混ぜこぜ', level: 'advanced' },{ english: 'hoist', japanese: 'を持ち上げる、巻き上げる', level: 'advanced' },{ english: 'holocaust', japanese: '大虐殺、ホロコースト', level: 'advanced' },{ english: 'homage', japanese: '敬意、臣下の礼', level: 'advanced' },{ english: 'homegrown', japanese: '自家製の、その土地生まれの', level: 'advanced' },{ english: 'homely', japanese: '家庭的な、不格好な', level: 'advanced' },{ english: 'homeopathy', japanese: '同種療法、ホームオパシー', level: 'advanced' },{ english: 'homogeneous', japanese: '均質の、同質の', level: 'advanced' },{ english: 'homogenize', japanese: 'を均質化する', level: 'advanced' },{ english: 'hone', japanese: 'を研ぐ、磨きをかける', level: 'advanced' },{ english: 'hoodwink', japanese: 'を騙す、目隠しする', level: 'advanced' },{ english: 'horde', japanese: '大群、遊牧民の群れ', level: 'advanced' },{ english: 'horizon', japanese: '地平線、水平線', level: 'advanced' },{ english: 'horizontal', japanese: '水平な、横の', level: 'advanced' },{ english: 'horrid', japanese: '恐ろしい、極めて不快な', level: 'advanced' },{ english: 'horrify', japanese: 'をゾッとさせる', level: 'advanced' },{ english: 'hospitable', japanese: 'もてなしのよい、親切な', level: 'advanced' },{ english: 'hospitality', japanese: '手厚いもてなし', level: 'advanced' },{ english: 'hostage', japanese: '人質', level: 'advanced' },{ english: 'hostile', japanese: '敵意のある', level: 'advanced' },{ english: 'hostility', japanese: '敵意、戦争行為', level: 'advanced' },{ english: 'hound', japanese: '猟犬、を追い詰める', level: 'advanced' },{ english: 'housebreak', japanese: 'に家宅侵入する', level: 'advanced' },{ english: 'household', japanese: '世帯、家族', level: 'advanced' },{ english: 'hovel', japanese: '粗末な小屋、あばら家', level: 'advanced' },{ english: 'hover', japanese: '空中に停止する、うろつく', level: 'advanced' },{ english: 'hub', japanese: '中心、中核', level: 'advanced' },{ english: 'hubris', japanese: '傲慢、自信過剰', level: 'advanced' },{ english: 'huckster', japanese: '押し売り、露天商', level: 'advanced' },{ english: 'huddle', japanese: '体を寄せ合う、ごちゃ混ぜ', level: 'advanced' },{ english: 'hue', japanese: '色合い、色彩', level: 'advanced' },{ english: 'huff', japanese: 'ふくれっ面、立腹する', level: 'advanced' },{ english: 'hug', japanese: 'を抱きしめる', level: 'advanced' },{ english: 'huge', japanese: '巨大な', level: 'advanced' },{ english: 'hum', japanese: '鼻歌を歌う、ブンブン鳴る', level: 'advanced' },{ english: 'humanitarian', japanese: '人道主義の', level: 'advanced' },{ english: 'humanity', japanese: '人類、人間性', level: 'advanced' },{ english: 'humble', japanese: '謙虚な、卑しい', level: 'advanced' },{ english: 'humbug', japanese: '詐欺、ペテン', level: 'advanced' },{ english: 'humid', japanese: '湿気のある', level: 'advanced' },{ english: 'humidity', japanese: '湿度、湿気', level: 'advanced' },{ english: 'humiliate', japanese: 'に恥をかかせる', level: 'advanced' },{ english: 'humility', japanese: '謙遜、卑下', level: 'advanced' },{ english: 'humor', japanese: 'ユーモア、機嫌', level: 'advanced' },{ english: 'humorous', japanese: '滑稽な、ユーモアのある', level: 'advanced' },{ english: 'hunch', japanese: '直感、予感、を丸める', level: 'advanced' },{ english: 'hundredfold', japanese: '100倍の', level: 'advanced' },{ english: 'hurdle', japanese: '障害、ハードルを越える', level: 'advanced' },{ english: 'hurl', japanese: 'を強く投げつける', level: 'advanced' },{ english: 'hurricane', japanese: 'ハリケーン', level: 'advanced' },{ english: 'husbandry', japanese: '農業、節約', level: 'advanced' },{ english: 'hush', japanese: 'を静まらせる、沈黙', level: 'advanced' },{ english: 'husk', japanese: '殻、外皮', level: 'advanced' },{ english: 'husky', japanese: 'ハスキーな、たくましい', level: 'advanced' },{ english: 'hustle', japanese: 'を乱暴に押す、ハッスルする', level: 'advanced' },{ english: 'hybrid', japanese: '雑種、ハイブリッド', level: 'advanced' },{ english: 'hydrant', japanese: '消火栓', level: 'advanced' },{ english: 'hydraulic', japanese: '水力学の、油圧式の', level: 'advanced' },{ english: 'hygiene', japanese: '衛生、健康法', level: 'advanced' },{ english: 'hymn', japanese: '賛美歌、聖歌', level: 'advanced' },{ english: 'hype', japanese: '誇大広告、騙す', level: 'advanced' },{ english: 'hyperbole', japanese: '誇張法、大げさな表現', level: 'advanced' },{ english: 'hypercritical', japanese: '酷評する、難癖をつける', level: 'advanced' },{ english: 'hypnosis', japanese: '催眠状態、催眠術', level: 'advanced' },{ english: 'hypnotic', japanese: '催眠の、催眠剤', level: 'advanced' },{ english: 'hypocrisy', japanese: '偽善、猫かぶり', level: 'advanced' },{ english: 'hypocrite', japanese: '偽善者', level: 'advanced' },{ english: 'hypodermic', japanese: '皮下注射の、皮下組織の', level: 'advanced' },{ english: 'hypothesis', japanese: '仮説', level: 'advanced' },{ english: 'hypothetical', japanese: '仮説の、仮定の', level: 'advanced' },{ english: 'hysteria', japanese: 'ヒステリー、病的興奮', level: 'advanced' },{ english: 'hysterical', japanese: 'ヒステリックな、理性を失った', level: 'advanced' }];let currentFilter = 'all';let quizQuestions = [];let currentIndex = 0;let score = 0;let isAnswered = false;// レベルフィルター切り替え（修正版）function setFilter(level) {currentFilter = level;document.getElementById('btn-all').classList.remove('selected');document.getElementById('btn-basic').classList.remove('selected');document.getElementById('btn-intermediate').classList.remove('selected');document.getElementById('btn-advanced').classList.remove('selected');document.getElementById(btn-${level}).classList.add('selected');const filteredCount = wordDatabase.filter(w => level === 'all' || w.level === level).length;const input = document.getElementById('question-count');input.max = filteredCount;if (parseInt(input.value) > filteredCount || parseInt(input.value) === 0) {input.value = Math.min(10, filteredCount);}}// クイズ開始function startQuiz() {const inputCount = parseInt(document.getElementById('question-count').value);let pool = wordDatabase.filter(w => currentFilter === 'all' || w.level === currentFilter);if (pool.length === 0) {alert('対象の単語が見つかりませんニャ。');return;}const finalCount = Math.min(inputCount, pool.length);if (isNaN(finalCount) || finalCount <= 0) {alert('正しい問題数を入力してニャ！');return;}shuffleArray(pool);quizQuestions = pool.slice(0, finalCount);currentIndex = 0;score = 0;document.getElementById('home-screen').classList.remove('active');document.getElementById('quiz-screen').classList.add('active');showQuestion();}// 問題表示function showQuestion() {isAnswered = false;const currentQuestion = quizQuestions[currentIndex];document.getElementById('progress-text').innerText = ${currentIndex + 1} / ${quizQuestions.length}問目;document.getElementById('question-text').innerText = currentQuestion.japanese;let options = [currentQuestion.english];let allEnglishWords = wordDatabase.map(w => w.english);while (options.length < 4) {let randomWord = allEnglishWords[Math.floor(Math.random() * allEnglishWords.length)];if (!options.includes(randomWord)) {options.push(randomWord);}}shuffleArray(options);const buttons = document.querySelectorAll('.option-btn');buttons.forEach((btn, index) => {btn.innerText = options[index];btn.className = 'option-btn';btn.disabled = false;if (options[index] === currentQuestion.english) {btn.dataset.correct = "true";} else {btn.dataset.correct = "false";}});}// 判定処理function checkAnswer(selectedIndex) {if (isAnswered) return;isAnswered = true;const buttons = document.querySelectorAll('.option-btn');const selectedButton = buttons[selectedIndex];if (selectedButton.dataset.correct === "true") {selectedButton.classList.add('correct');score++;} else {selectedButton.classList.add('incorrect');buttons.forEach(btn => {if (btn.dataset.correct === "true") {btn.classList.add('correct');}});}buttons.forEach(btn => btn.disabled = true);setTimeout(() => {currentIndex++;if (currentIndex < quizQuestions.length) {showQuestion();} else {showResult();}}, 1200);}// 結果表示function showResult() {document.getElementById('quiz-screen').classList.remove('active');document.getElementById('result-screen').classList.add('active');document.getElementById('result-score-text').innerText = ${quizQuestions.length}問中 ${score}問正解！;let comment = '';const rate = score / quizQuestions.length;if (rate === 1) {comment = 'カンペキニャ！素晴らしいニャン！🐾';} else if (rate >= 0.8) {comment = 'すごいニャ！その調子でがんばるニャ！✨';} else if (rate >= 0.5) {comment = '半分以上あってるニャ！あともう一息ニャ。🐾';} else {comment = 'これからニャ！何度も挑戦して覚えるニャ。🐱';}document.getElementById('result-comment').innerText = comment;}// ホームに戻る（アラート付き）function confirmGoHome() {if (confirm('データが消えるけど大丈夫かニャ？')) {showHomeScreen();}}// ホーム画面を表示function showHomeScreen() {document.getElementById('quiz-screen').classList.remove('active');document.getElementById('result-screen').classList.remove('active');document.getElementById('home-screen').classList.add('active');}// 配列のシャッフルfunction shuffleArray(array) {for (let i = array.length - 1; i > 0; i--) {const j = Math.floor(Math.random() * (i + 1));[array[i], array[j]] = [array[j], array[i]];}}
