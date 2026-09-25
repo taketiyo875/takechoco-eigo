@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>英検3級 単語クイズ File 4 🐾</title>
+    <style>
+        :root {
+            --primary-orange: #FF851B;
+            --hover-orange: #FF9F43;
+            --correct-green: #2ECC71;
+            --incorrect-red: #E74C3C;
+            --bg-cream: #FFF5EB;
+            --text-dark: #2C3E50;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+            background-color: var(--bg-cream);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 133, 27, 0.15);
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            border: 3px solid var(--primary-orange);
+            position: relative;
+        }
+
+        h1 {
+            color: var(--primary-orange);
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .cat-decoration {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* ホーム画面 */
+        .filter-group {
+            margin: 20px 0;
+        }
+
+        .filter-btn {
+            background-color: #FFFFFF;
+            border: 2px solid var(--primary-orange);
+            color: var(--primary-orange);
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.selected {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+        }
+
+        .input-group {
+            margin: 25px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .input-group input {
+            width: 80px;
+            padding: 8px;
+            font-size: 18px;
+            text-align: center;
+            border: 2px solid var(--primary-orange);
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .start-btn {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 35px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(255, 133, 27, 0.3);
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        .start-btn:hover {
+            background-color: var(--hover-orange);
+        }
+
+        .start-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* クイズ画面 */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .question-box {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 30px 0;
+            min-height: 40px;
+            color: var(--text-dark);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .option-btn {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            border: none;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.2s;
+            text-align: center;
+        }
+
+        .option-btn:hover {
+            background-color: var(--hover-orange);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-green) !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-red) !important;
+        }
+
+        .home-nav-btn {
+            background-color: #7F8C8D;
+            color: #FFFFFF;
+            border: none;
+            padding: 8px 15px;
+            font-size: 14px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .home-nav-btn:hover {
+            background-color: #95A5A6;
+        }
+
+        /* 結果画面 */
+        .result-score {
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--primary-orange);
+            margin: 20px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--primary-orange);
+            color: #FFFFFF;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="cat-decoration">🐾 🐱 🐾</div>
+    
+    <!-- ホーム画面 -->
+    <div id="home-screen" class="screen active">
+        <h1>英検3級 英単語クイズ (File 4 / 4)</h1>
+        <p>日本語の意味に合う英語を4つの選択肢から選ぶニャ！</p>
+        
+        <div class="filter-group">
+            <button id="btn-all" class="filter-btn selected" onclick="setFilter('all')">全レベル</button>
+            <button id="btn-basic" class="filter-btn" onclick="setFilter('basic')">初級</button>
+            <button id="btn-intermediate" class="filter-btn" onclick="setFilter('intermediate')">中級</button>
+            <button id="btn-advanced" class="filter-btn" onclick="setFilter('advanced')">上級</button>
+        </div>
+
+        <div class="input-group">
+            <label for="question-count">挑戦する問題数：</label>
+            <input type="number" id="question-count" value="10" min="1" max="500">
+        </div>
+
+        <button class="start-btn" onclick="startQuiz()">クイズを始める🐾</button>
+    </div>
+
+    <!-- クイズ画面 -->
+    <div id="quiz-screen" class="screen">
+        <div class="quiz-header">
+            <div id="progress-text">1 / 10問目</div>
+            <button class="home-nav-btn" onclick="confirmGoHome()">ホームに戻る</button>
+        </div>
+        <p style="color: #7F8C8D; margin: 0;">この日本語に合う英語を選んでニャ！</p>
+        <div id="question-text" class="question-box"></div>
+        <div class="options-list">
+            <button class="option-btn" onclick="checkAnswer(0)"></button>
+            <button class="option-btn" onclick="checkAnswer(1)"></button>
+            <button class="option-btn" onclick="checkAnswer(2)"></button>
+            <button class="option-btn" onclick="checkAnswer(3)"></button>
+        </div>
+    </div>
+
+    <!-- 結果画面 -->
+    <div id="result-screen" class="screen">
+        <h1>結果発表！</h1>
+        <div class="result-score" id="result-score-text">0 / 0問正解</div>
+        <p id="result-comment"></p>
+        <button class="restart-btn" onclick="showHomeScreen()">もう一度あそぶ🐾</button>
+    </div>
+</div>
+
+<script>
+// 500単語の完全データ（重複なし・連番完全撤廃）
+const wordDatabase = [
+    // 初級 (166語)
+    { english: 'actor', japanese: '俳優', level: 'basic' },
+    { english: 'actress', japanese: '女優', level: 'basic' },
+    { english: 'blanket', japanese: '毛布', level: 'basic' },
+    { english: 'borrow', japanese: 'を借りる', level: 'basic' },
+    { english: 'lend', japanese: 'を貸す', level: 'basic' },
+    { english: 'button', japanese: 'ボタン', level: 'basic' },
+    { english: 'calendar', japanese: 'カレンダー', level: 'basic' },
+    { english: 'castle', japanese: '城', level: 'basic' },
+    { english: 'chain', japanese: '鎖、チェーン', level: 'basic' },
+    { english: 'cheap', japanese: '安い', level: 'basic' },
+    { english: 'expensive', japanese: '高価な', level: 'basic' },
+    { english: 'cheese', japanese: 'チーズ', level: 'basic' },
+    { english: 'chicken', japanese: '鶏肉、ニワトリ', level: 'basic' },
+    { english: 'church', japanese: '教会', level: 'basic' },
+    { english: 'circle', japanese: '円、輪', level: 'basic' },
+    { english: 'clever', japanese: '賢い', level: 'basic' },
+    { english: 'climb', japanese: 'に登る', level: 'basic' },
+    { english: 'clock', japanese: '時計', level: 'basic' },
+    { english: 'clothes', japanese: '衣服', level: 'basic' },
+    { english: 'cloud', japanese: '雲', level: 'basic' },
+    { english: 'cloudy', japanese: '曇った', level: 'basic' },
+    { english: 'coat', japanese: 'コート', level: 'basic' },
+    { english: 'coin', japanese: '硬貨', level: 'basic' },
+    { english: 'collect', japanese: 'を集める', level: 'basic' },
+    { english: 'college', japanese: '大学', level: 'basic' },
+    { english: 'color', japanese: '色', level: 'basic' },
+    { english: 'comfortable', japanese: '快適な', level: 'basic' },
+    { english: 'comic', japanese: '漫画', level: 'basic' },
+    { english: 'company', japanese: '会社', level: 'basic' },
+    { english: 'concert', japanese: 'コンサート', level: 'basic' },
+    { english: 'congratulations', japanese: 'おめでとう', level: 'basic' },
+    { english: 'cook', japanese: '料理する', level: 'basic' },
+    { english: 'cookie', japanese: 'クッキー', level: 'basic' },
+    { english: 'corner', japanese: '角、コーナー', level: 'basic' },
+    { english: 'costume', japanese: '衣装', level: 'basic' },
+    { english: 'cotton', japanese: '綿', level: 'basic' },
+    { english: 'couch', japanese: 'ソファー', level: 'basic' },
+    { english: 'cough', japanese: '咳をする', level: 'basic' },
+    { english: 'countryside', japanese: '田舎', level: 'basic' },
+    { english: 'cousin', japanese: 'いとこ', level: 'basic' },
+    { english: 'cow', japanese: '雌牛', level: 'basic' },
+    { english: 'crayon', japanese: 'クレヨン', level: 'basic' },
+    { english: 'cream', japanese: 'クリーム', level: 'basic' },
+コードは注意してご使用ください。{ english: 'cross', japanese: 'を横切る', level: 'basic' },{ english: 'crowd', japanese: '群衆', level: 'basic' },{ english: 'cry', japanese: '泣く', level: 'basic' },{ english: 'cucumber', japanese: 'きゅうり', level: 'basic' },{ english: 'culture', japanese: '文化', level: 'basic' },{ english: 'cup', japanese: 'カップ', level: 'basic' },{ english: 'curtain', japanese: 'カーテン', level: 'basic' },{ english: 'cushion', japanese: 'クッション', level: 'basic' },{ english: 'customer', japanese: '顧客', level: 'basic' },{ english: 'cycle', japanese: '自転車に乗る', level: 'basic' },{ english: 'dangerous', japanese: '危険な', level: 'basic' },{ english: 'dark', japanese: '暗い', level: 'basic' },{ english: 'date', japanese: '日付', level: 'basic' },{ english: 'daughter', japanese: '娘', level: 'basic' },{ english: 'dead', japanese: '死んだ', level: 'basic' },{ english: 'deaf', japanese: '耳が聞こえない', level: 'basic' },{ english: 'dear', japanese: '親愛なる', level: 'basic' },{ english: 'decide', japanese: 'を決める', level: 'basic' },{ english: 'deep', japanese: '深い', level: 'basic' },{ english: 'deer', japanese: 'シカ', level: 'basic' },{ english: 'delicious', japanese: 'とても美味しい', level: 'basic' },{ english: 'dentist', japanese: '歯医者', level: 'basic' },{ english: 'department', japanese: '部門、売り場', level: 'basic' },{ english: 'desert', japanese: '砂漠', level: 'basic' },{ english: 'desk', japanese: '机', level: 'basic' },{ english: 'dessert', japanese: 'デザート', level: 'basic' },{ english: 'diamond', japanese: 'ダイヤモンド', level: 'basic' },{ english: 'diary', japanese: '日記', level: 'basic' },{ english: 'dictionary', japanese: '辞書', level: 'basic' },{ english: 'die', japanese: '死ぬ', level: 'basic' },{ english: 'difference', japanese: '違い', level: 'basic' },{ english: 'different', japanese: '違った', level: 'basic' },{ english: 'difficult', japanese: '難しい', level: 'basic' },{ english: 'dig', japanese: '掘る', level: 'basic' },{ english: 'dinner', japanese: 'ディナー', level: 'basic' },{ english: 'dinosaur', japanese: '恐竜', level: 'basic' },{ english: 'dirty', japanese: '汚い', level: 'basic' },{ english: 'discover', japanese: 'を発見する', level: 'basic' },{ english: 'dish', japanese: '皿、料理', level: 'basic' },{ english: 'dislike', japanese: 'を嫌う', level: 'basic' },{ english: 'dive', japanese: '飛び込む', level: 'basic' },{ english: 'doctor', japanese: '医者', level: 'basic' },{ english: 'dog', japanese: '犬', level: 'basic' },{ english: 'doll', japanese: '人形', level: 'basic' },{ english: 'dolphin', japanese: 'イルカ', level: 'basic' },{ english: 'donkey', japanese: 'ロバ', level: 'basic' },{ english: 'door', japanese: 'ドア', level: 'basic' },{ english: 'double', japanese: '2倍の', level: 'basic' },{ english: 'downstairs', japanese: '階下へ', level: 'basic' },{ english: 'dragon', japanese: '竜、ドラゴン', level: 'basic' },{ english: 'draw', japanese: 'を描く、引く', level: 'basic' },{ english: 'drawer', japanese: '引き出し', level: 'basic' },{ english: 'dream', japanese: '夢', level: 'basic' },{ english: 'dress', japanese: 'ドレス', level: 'basic' },{ english: 'drink', japanese: 'を飲む', level: 'basic' },{ english: 'drive', japanese: '運転する', level: 'basic' },{ english: 'driver', japanese: '運転手', level: 'basic' },{ english: 'drop', japanese: 'を落とす', level: 'basic' },{ english: 'drum', japanese: '太鼓、ドラム', level: 'basic' },{ english: 'dry', japanese: '乾いた', level: 'basic' },{ english: 'duck', japanese: 'アヒル', level: 'basic' },{ english: 'during', japanese: 'の間に', level: 'basic' },{ english: 'dust', japanese: 'ほこり', level: 'basic' },{ english: 'duty', japanese: '義務、関税', level: 'basic' },{ english: 'each', japanese: 'それぞれの', level: 'basic' },{ english: 'eagle', japanese: 'ワシ', level: 'basic' },{ english: 'ear', japanese: '耳', level: 'basic' },{ english: 'early', japanese: '早い', level: 'basic' },{ english: 'earth', japanese: '地球', level: 'basic' },{ english: 'earthquake', japanese: '地震', level: 'basic' },{ english: 'east', japanese: '東', level: 'basic' },{ english: 'easy', japanese: '簡単な', level: 'basic' },{ english: 'eat', japanese: '食べる', level: 'basic' },{ english: 'education', japanese: '教育', level: 'basic' },{ english: 'egg', japanese: '卵', level: 'basic' },{ english: 'eight', japanese: '8つの', level: 'basic' },{ english: 'eighteen', japanese: '18の', level: 'basic' },{ english: 'eighty', japanese: '80の', level: 'basic' },{ english: 'either', japanese: 'どちらかの', level: 'basic' },{ english: 'elephant', japanese: 'ゾウ', level: 'basic' },{ english: 'eleven', japanese: '11の', level: 'basic' },{ english: 'else', japanese: '他に', level: 'basic' },{ english: 'email', japanese: 'Eメール', level: 'basic' },{ english: 'empty', japanese: '空の', level: 'basic' },{ english: 'end', japanese: '終わり', level: 'basic' },{ english: 'enemy', japanese: '敵', level: 'basic' },{ english: 'energy', japanese: 'エネルギー', level: 'basic' },{ english: 'engine', japanese: 'エンジン', level: 'basic' },{ english: 'engineer', japanese: '技術者', level: 'basic' },{ english: 'enjoy', japanese: 'を楽しむ', level: 'basic' },{ english: 'enough', japanese: '十分な', level: 'basic' },{ english: 'enter', japanese: 'に入る', level: 'basic' },{ english: 'entrance', japanese: '入口', level: 'basic' },{ english: 'envelope', japanese: '封筒', level: 'basic' },{ english: 'environment', japanese: '環境', level: 'basic' },{ english: 'equal', japanese: '等しい', level: 'basic' },{ english: 'eraser', japanese: '消しゴム', level: 'basic' },{ english: 'escape', japanese: '逃げる', level: 'basic' },{ english: 'especially', japanese: '特に', level: 'basic' },{ english: 'evening', japanese: '晩、夕方', level: 'basic' },{ english: 'event', japanese: '行事、イベント', level: 'basic' },{ english: 'ever', japanese: '今までに', level: 'basic' },{ english: 'every', japanese: 'すべての', level: 'basic' },{ english: 'everybody', japanese: '誰でも', level: 'basic' },{ english: 'everyone', japanese: 'みんな', level: 'basic' },{ english: 'everything', japanese: 'すべてのこと', level: 'basic' },{ english: 'everywhere', japanese: 'どこでも', level: 'basic' },{ english: 'exact', japanese: '正確な', level: 'basic' },{ english: 'exam', japanese: '試験', level: 'basic' },{ english: 'examination', japanese: '試験（長）', level: 'basic' },{ english: 'example', japanese: '例', level: 'basic' },{ english: 'excellent', japanese: '優秀な', level: 'basic' },{ english: 'except', japanese: 'を除いて', level: 'basic' },{ english: 'excited', japanese: '興奮した', level: 'basic' },{ english: 'exciting', japanese: '興奮させる', level: 'basic' },{ english: 'excuse', japanese: 'を許す', level: 'basic' },{ english: 'exercise', japanese: '運動、練習', level: 'basic' },{ english: 'exhibition', japanese: '展覧会', level: 'basic' },{ english: 'exit', japanese: '出口', level: 'basic' },// 中級 (167語){ english: 'factor', japanese: '要因', level: 'intermediate' },{ english: 'factory', japanese: '工場', level: 'intermediate' },{ english: 'fade', japanese: 'あせる、衰える', level: 'intermediate' },{ english: 'fail', japanese: '失敗する', level: 'intermediate' },{ english: 'failure', japanese: '失敗', level: 'intermediate' },{ english: 'faint', japanese: 'かすかな、失神する', level: 'intermediate' },{ english: 'fair', japanese: '公平な、見本市', level: 'intermediate' },{ english: 'fairly', japanese: 'かなり、公正に', level: 'intermediate' },{ english: 'faith', japanese: '信頼、信仰', level: 'intermediate' },{ english: 'faithful', japanese: '忠実な', level: 'intermediate' },{ english: 'fall', japanese: '落ちる、秋', level: 'intermediate' },{ english: 'false', japanese: '誤った、偽の', level: 'intermediate' },{ english: 'familiar', japanese: 'よく知られた', level: 'intermediate' },{ english: 'fame', japanese: '名声', level: 'intermediate' },{ english: 'famous', japanese: '有名な', level: 'intermediate' },{ english: 'fan', japanese: 'ファン、うちわ', level: 'intermediate' },{ english: 'fancy', japanese: '高級な、空想', level: 'intermediate' },{ english: 'fantastic', japanese: 'すばらしい', level: 'intermediate' },{ english: 'far', japanese: '遠くに', level: 'intermediate' },{ english: 'fare', japanese: '運賃', level: 'intermediate' },{ english: 'farm', japanese: '農場', level: 'intermediate' },{ english: 'farmer', japanese: '農民', level: 'intermediate' },{ english: 'fascinate', japanese: 'を魅了する', level: 'intermediate' },{ english: 'fashion', japanese: '流行、ファッション', level: 'intermediate' },{ english: 'fashionable', japanese: '流行の', level: 'intermediate' },{ english: 'fast', japanese: '速い', level: 'intermediate' },{ english: 'fasten', japanese: 'を締める、固定する', level: 'intermediate' },{ english: 'fat', japanese: '太った、脂肪', level: 'intermediate' },{ english: 'fatal', japanese: '致命的な', level: 'intermediate' },{ english: 'fate', japanese: '運命', level: 'intermediate' },{ english: 'father', japanese: '父親', level: 'intermediate' },{ english: 'fault', japanese: '欠点、責任', level: 'intermediate' },{ english: 'favor', japanese: '好意', level: 'intermediate' },{ english: 'favorable', japanese: '好都合な', level: 'intermediate' },{ english: 'favorite', japanese: 'お気に入りの', level: 'intermediate' },{ english: 'fear', japanese: '恐れ', level: 'intermediate' },{ english: 'fearful', japanese: '恐れている', level: 'intermediate' },{ english: 'feather', japanese: '羽、羽毛', level: 'intermediate' },{ english: 'feature', japanese: '特徴、特集する', level: 'intermediate' },{ english: 'fee', japanese: '料金、謝礼', level: 'intermediate' },{ english: 'feed', japanese: 'にエサをやる', level: 'intermediate' },{ english: 'feel', japanese: 'を感じる', level: 'intermediate' },{ english: 'feeling', japanese: '感情、感覚', level: 'intermediate' },{ english: 'fellow', japanese: '仲間、男', level: 'intermediate' },{ english: 'female', japanese: '女性の、雌の', level: 'intermediate' },{ english: 'fence', japanese: '柵、フェンス', level: 'intermediate' },{ english: 'festival', japanese: '祭り', level: 'intermediate' },{ english: 'fetch', japanese: 'を取って来る', level: 'intermediate' },{ english: 'fever', japanese: '熱、発熱', level: 'intermediate' },{ english: 'few', japanese: 'ほとんどない', level: 'intermediate' },{ english: 'fiber', japanese: '繊維', level: 'intermediate' },{ english: 'field', japanese: '分野、野原', level: 'intermediate' },{ english: 'fierce', japanese: '激しい、猛烈な', level: 'intermediate' },{ english: 'fifteen', japanese: '15の', level: 'intermediate' },{ english: 'fifty', japanese: '50の', level: 'intermediate' },{ english: 'fight', japanese: '戦う', level: 'intermediate' },{ english: 'figure', japanese: '数字、姿、人物', level: 'intermediate' },{ english: 'file', japanese: 'ファイル', level: 'intermediate' },{ english: 'fill', japanese: 'を満たす', level: 'intermediate' },{ english: 'film', japanese: '映画、フィルム', level: 'intermediate' },{ english: 'final', japanese: '最後の', level: 'intermediate' },{ english: 'finally', japanese: 'ついに', level: 'intermediate' },{ english: 'finance', japanese: '財政、資金', level: 'intermediate' },{ english: 'financial', japanese: '財政上の', level: 'intermediate' },{ english: 'find', japanese: 'を見つける', level: 'intermediate' },{ english: 'fine', japanese: '立派な、元気な、罰金', level: 'intermediate' },{ english: 'finger', japanese: '指', level: 'intermediate' },{ english: 'finish', japanese: 'を終える', level: 'intermediate' },{ english: 'fire', japanese: '火、火事、解雇する', level: 'intermediate' },{ english: 'firm', japanese: 'しっかりした、会社', level: 'intermediate' },{ english: 'first', japanese: '最初の、第1に', level: 'intermediate' },{ english: 'fish', japanese: '魚、釣りをする', level: 'intermediate' },{ english: 'fisherman', japanese: '漁師', level: 'intermediate' },{ english: 'fist', japanese: '拳（こぶし）', level: 'intermediate' },{ english: 'fit', japanese: 'に適している', level: 'intermediate' },{ english: 'five', japanese: '5つの', level: 'intermediate' },{ english: 'fix', japanese: 'を固定する、修理する', level: 'intermediate' },{ english: 'flag', japanese: '旗', level: 'intermediate' },{ english: 'flame', japanese: '炎', level: 'intermediate' },{ english: 'flash', japanese: '閃光、ひらめき', level: 'intermediate' },{ english: 'flat', japanese: '平らな、アパート', level: 'intermediate' },{ english: 'flavor', japanese: '風味', level: 'intermediate' },{ english: 'flee', japanese: '逃げる（f）', level: 'intermediate' },{ english: 'flesh', japanese: '肉、果肉', level: 'intermediate' },{ english: 'flight', japanese: '飛行、航空便', level: 'intermediate' },{ english: 'float', japanese: '浮かぶ', level: 'intermediate' },{ english: 'flock', japanese: '群れ', level: 'intermediate' },{ english: 'flood', japanese: '洪水', level: 'intermediate' },{ english: 'floor', japanese: '床、階', level: 'intermediate' },{ english: 'flour', japanese: '小麦粉', level: 'intermediate' },{ english: 'flow', japanese: '流れる', level: 'intermediate' },{ english: 'flower', japanese: '花', level: 'intermediate' },{ english: 'flu', japanese: 'インフルエンザ', level: 'intermediate' },{ english: 'fluid', japanese: '流体、流動的な', level: 'intermediate' },{ english: 'fly', japanese: '飛ぶ、ハエ', level: 'intermediate' },{ english: 'focus', japanese: '焦点を合わせる', level: 'intermediate' },{ english: 'fog', japanese: '霧', level: 'intermediate' },{ english: 'fold', japanese: 'を折りたたむ', level: 'intermediate' },{ english: 'folk', japanese: '人々、民族の', level: 'intermediate' },{ english: 'follow', japanese: 'に従う、ついて行く', level: 'intermediate' },{ english: 'following', japanese: '次の、以下の', level: 'intermediate' },{ english: 'fond', japanese: '好んで', level: 'intermediate' },{ english: 'food', japanese: '食べ物', level: 'intermediate' },{ english: 'fool', japanese: '愚か者、をだます', level: 'intermediate' },{ english: 'foolish', japanese: '愚かな', level: 'intermediate' },{ english: 'foot', japanese: '足（足首から下）', level: 'intermediate' },{ english: 'football', japanese: 'フットボール', level: 'intermediate' },{ english: 'forbid', japanese: 'を禁止する', level: 'intermediate' },{ english: 'force', japanese: '力、を強制する', level: 'intermediate' },{ english: 'forecast', japanese: '予報', level: 'intermediate' },{ english: 'forehead', japanese: '額（ひたい）', level: 'intermediate' },{ english: 'foreign', japanese: '外国の', level: 'intermediate' },{ english: 'foreigner', japanese: '外国人', level: 'intermediate' },{ english: 'forest', japanese: '森林', level: 'intermediate' },{ english: 'forever', japanese: '永遠に', level: 'intermediate' },{ english: 'forget', japanese: 'を忘れる', level: 'intermediate' },{ english: 'forgive', japanese: 'を許す（f）', level: 'intermediate' },{ english: 'fork', japanese: 'フォーク', level: 'intermediate' },{ english: 'form', japanese: '形、用紙、を形成する', level: 'intermediate' },{ english: 'formal', japanese: '公式の、形式的な', level: 'intermediate' },{ english: 'former', japanese: '前の、前者', level: 'intermediate' },{ english: 'forth', japanese: '前へ、外へ', level: 'intermediate' },{ english: 'fortnight', japanese: '2週間', level: 'intermediate' },{ english: 'fortunate', japanese: '幸運な', level: 'intermediate' },{ english: 'fortune', japanese: '運、財産', level: 'intermediate' },{ english: 'forty', japanese: '40の', level: 'intermediate' },{ english: 'forward', japanese: '前方へ', level: 'intermediate' },{ english: 'fossil', japanese: '化石', level: 'intermediate' },{ english: 'foster', japanese: 'を育成する', level: 'intermediate' },{ english: 'found', japanese: 'を設立する', level: 'intermediate' },{ english: 'foundation', japanese: '基礎、財団', level: 'intermediate' },{ english: 'fountain', japanese: '噴水、泉', level: 'intermediate' },{ english: 'four', japanese: '4つの', level: 'intermediate' },{ english: 'fourteen', japanese: '14の', level: 'intermediate' },{ english: 'fourth', japanese: '第4の', level: 'intermediate' },{ english: 'fox', japanese: 'キツネ', level: 'intermediate' },{ english: 'fraction', japanese: 'ほんのわずか、分数', level: 'intermediate' },{ english: 'frame', japanese: '枠、骨組み', level: 'intermediate' },{ english: 'frank', japanese: '率初な', level: 'intermediate' },{ english: 'free', japanese: '自由な、無料の', level: 'intermediate' },{ english: 'freedom', japanese: '自由', level: 'intermediate' },{ english: 'freeze', japanese: '凍る', level: 'intermediate' },{ english: 'frequent', japanese: '頻繁な', level: 'intermediate' },{ english: 'frequently', japanese: '頻繁に', level: 'intermediate' },{ english: 'fresh', japanese: '新鮮な', level: 'intermediate' },{ english: 'friction', japanese: '摩擦', level: 'intermediate' },{ english: 'friend', japanese: '友達', level: 'intermediate' },{ english: 'friendly', japanese: '親しみやすい', level: 'intermediate' },{ english: 'friendship', japanese: '友情', level: 'intermediate' },{ english: 'fright', japanese: '恐怖（f）', level: 'intermediate' },{ english: 'frighten', japanese: 'を怖がらせる', level: 'intermediate' },{ english: 'frog', japanese: 'カエル', level: 'intermediate' },{ english: 'from', japanese: 'から', level: 'intermediate' },{ english: 'front', japanese: '前面、前部', level: 'intermediate' },{ english: 'frost', japanese: '霜（しも）', level: 'intermediate' },{ english: 'frown', japanese: 'まゆをひそめる', level: 'intermediate' },{ english: 'fruit', japanese: '果物', level: 'intermediate' },{ english: 'frustrate', japanese: 'を挫折させる', level: 'intermediate' },{ english: 'fry', japanese: 'を油で揚げる、炒める', level: 'intermediate' },{ english: 'fuel', japanese: '燃料', level: 'intermediate' },// 上級 (167語){ english: 'gabble', japanese: '早口でしゃべる', level: 'advanced' },{ english: 'gadget', japanese: '便利な小道具', level: 'advanced' },{ english: 'gag', japanese: '猿ぐつわ、ジョーク', level: 'advanced' },{ english: 'gain', japanese: 'を獲得する、増す', level: 'advanced' },{ english: 'gala', japanese: 'お祭り、祝祭', level: 'advanced' },{ english: 'galaxy', japanese: '銀河、星雲', level: 'advanced' },{ english: 'gale', japanese: '疾風、大風', level: 'advanced' },{ english: 'gall', japanese: '不図々しさ、胆汁', level: 'advanced' },{ english: 'gallant', japanese: '勇敢な、堂々とした', level: 'advanced' },{ english: 'gallery', japanese: '美術館、画廊', level: 'advanced' },{ english: 'galley', japanese: '大コック船、船の調理場', level: 'advanced' },{ english: 'gallon', japanese: 'ガロン（容積単位）', level: 'advanced' },{ english: 'gallop', japanese: '全速力で走る', level: 'advanced' },{ english: 'gallows', japanese: '絞首台', level: 'advanced' },{ english: 'gamble', japanese: 'ギャンブル、賭け事をする', level: 'advanced' },{ english: 'gambol', japanese: 'はね回る', level: 'advanced' },{ english: 'game', japanese: '試合、ゲーム', level: 'advanced' },{ english: 'gander', japanese: '雄のガチョウ', level: 'advanced' },{ english: 'gang', japanese: '一味、ギャング', level: 'advanced' },{ english: 'gangway', japanese: '通路、タラップ', level: 'advanced' },{ english: 'gap', japanese: '隙間、隔たり', level: 'advanced' },{ english: 'gape', japanese: '口をぽかんと開ける', level: 'advanced' },{ english: 'garage', japanese: '車庫、ガレージ', level: 'advanced' },{ english: 'garb', japanese: '服装、衣装', level: 'advanced' },{ english: 'garbage', japanese: '生ごみ', level: 'advanced' },{ english: 'garble', japanese: 'を文字通り歪める', level: 'advanced' },{ english: 'garden', japanese: '庭、庭園', level: 'advanced' },{ english: 'gargle', japanese: 'うがいをする', level: 'advanced' },{ english: 'garish', japanese: 'ぎらぎらする、派手な', level: 'advanced' },{ english: 'garland', japanese: '花輪、花冠', level: 'advanced' },{ english: 'garlic', japanese: 'ニンニク', level: 'advanced' },{ english: 'garment', japanese: '衣類（1着の）', level: 'advanced' },{ english: 'garner', japanese: 'を蓄える、集める', level: 'advanced' },{ english: 'garnish', japanese: 'を装飾する、添え物', level: 'advanced' },{ english: 'garrison', japanese: '駐屯地、守備隊', level: 'advanced' },{ english: 'garrulous', japanese: 'おしゃべりな', level: 'advanced' },{ english: 'garter', japanese: '靴下留め、ガーター', level: 'advanced' },{ english: 'gas', japanese: 'ガス、気体、ガソリン', level: 'advanced' },{ english: 'gash', japanese: '深い切り傷', level: 'advanced' },{ english: 'gasp', japanese: 'あえぐ、息をのむ', level: 'advanced' },{ english: 'gastric', japanese: '胃の', level: 'advanced' },{ english: 'gate', japanese: '門、ゲート', level: 'advanced' },{ english: 'gather', japanese: 'を集める、集まる', level: 'advanced' },{ english: 'gathering', japanese: '集まり、集会', level: 'advanced' },{ english: 'gauche', japanese: '不器用な、気の利かない', level: 'advanced' },{ english: 'gaudy', japanese: '派手で俗っぽい', level: 'advanced' },{ english: 'gauge', japanese: '計器、規格、測定する', level: 'advanced' },{ english: 'gaunt', japanese: 'やつれた、痩せこけた', level: 'advanced' },{ english: 'gauze', japanese: 'ガーゼ', level: 'advanced' },{ english: 'gavel', japanese: '小槌（議長・裁判官の）', level: 'advanced' },{ english: 'gawk', japanese: 'ぼんやり見る', level: 'advanced' },{ english: 'gay', japanese: '同性愛の、陽気な', level: 'advanced' },{ english: 'gaze', japanese: '見つめる、凝視する', level: 'advanced' },{ english: 'gazette', japanese: '官報、新聞', level: 'advanced' },{ english: 'gear', japanese: 'ギヤ、用具、連動させる', level: 'advanced' },{ english: 'gelatin', japanese: 'ゼラチン', level: 'advanced' },{ english: 'gem', japanese: '宝石、珠玉', level: 'advanced' },{ english: 'gender', japanese: 'ジェンダー、性別', level: 'advanced' },{ english: 'gene', japanese: '遺伝子', level: 'advanced' },{ english: 'general', japanese: '一般的な、大将', level: 'advanced' },{ english: 'generalize', japanese: 'を一般化する', level: 'advanced' },{ english: 'generally', japanese: '一般的に', level: 'advanced' },{ english: 'generate', japanese: 'を生み出す', level: 'advanced' },{ english: 'generation', japanese: '世代', level: 'advanced' },{ english: 'generator', japanese: '発電機', level: 'advanced' },{ english: 'generosity', japanese: '寛大さ', level: 'advanced' },{ english: 'generous', japanese: '寛大な', level: 'advanced' },{ english: 'genesis', japanese: '創世、起源', level: 'advanced' },{ english: 'genetic', japanese: '遺伝子の', level: 'advanced' },{ english: 'genial', japanese: '愛想の良い、温暖な', level: 'advanced' },{ english: 'genius', japanese: '天才、非凡な才能', level: 'advanced' },{ english: 'genre', japanese: 'ジャンル、様式', level: 'advanced' },{ english: 'gentle', japanese: '優しい、穏やかな', level: 'advanced' },{ english: 'gentleman', japanese: '紳士', level: 'advanced' },{ english: 'gentry', japanese: '紳士階級、上流気取り', level: 'advanced' },{ english: 'genuine', japanese: '本物の、真実の', level: 'advanced' },{ english: 'genus', japanese: '類、属', level: 'advanced' },{ english: 'geography', japanese: '地理学', level: 'advanced' },{ english: 'geology', japanese: '地質学', level: 'advanced' },{ english: 'geometry', japanese: '幾何学', level: 'advanced' },{ english: 'germ', japanese: '細菌', level: 'advanced' },{ english: 'german', japanese: 'ドイツの、ドイツ人', level: 'advanced' },{ english: 'germinate', japanese: '発芽する', level: 'advanced' },{ english: 'gerund', japanese: '動名詞', level: 'advanced' },{ english: 'gesture', japanese: '身振り手振り、ジェスチャー', level: 'advanced' },{ english: 'get', japanese: 'を手に入れる、なる', level: 'advanced' },{ english: 'geyser', japanese: '間欠泉、湯沸かし器', level: 'advanced' },{ english: 'ghastly', japanese: 'ぞっとするような', level: 'advanced' },{ english: 'ghetto', japanese: '少数民族居住区、ゲットー', level: 'advanced' },{ english: 'ghost', japanese: '幽霊', level: 'advanced' },{ english: 'giant', japanese: '巨人、巨大な', level: 'advanced' },{ english: 'gibberish', japanese: 'わけのわからないおしゃべり', level: 'advanced' },{ english: 'giddy', japanese: '目が回る、軽率な', level: 'advanced' },{ english: 'gift', japanese: '贈り物、才能', level: 'advanced' },{ english: 'gifted', japanese: '才能のある', level: 'advanced' },{ english: 'gigantic', japanese: '巨大な（g）', level: 'advanced' },{ english: 'giggle', japanese: 'くすくす笑う', level: 'advanced' },{ english: 'gild', japanese: 'に金箔を貼る', level: 'advanced' },{ english: 'gills', japanese: 'エラ（魚の）', level: 'advanced' },{ english: 'gimlet', japanese: '錐（きり）、ギムレット', level: 'advanced' },{ english: 'ginger', japanese: '生姜', level: 'advanced' },{ english: 'gingerly', japanese: '慎重に、恐る恐る', level: 'advanced' },{ english: 'gipsy', japanese: 'ジプシー、放浪者', level: 'advanced' },{ english: 'giraffe', japanese: 'キリン', level: 'advanced' },{ english: 'gird', japanese: 'を帯で締める、備える', level: 'advanced' },{ english: 'girdle', japanese: '帯、コルセット', level: 'advanced' },{ english: 'girl', japanese: '女の子', level: 'advanced' },{ english: 'girth', japanese: '胴回り、周囲の寸法', level: 'advanced' },{ english: 'gist', japanese: '要点、主旨', level: 'advanced' },{ english: 'give', japanese: 'を与える', level: 'advanced' },{ english: 'glacial', japanese: '氷河時代の、氷のように冷たい', level: 'advanced' },{ english: 'glacier', japanese: '氷河', level: 'advanced' },{ english: 'glad', japanese: '嬉しい', level: 'advanced' },{ english: 'glade', japanese: '林間の空き地', level: 'advanced' },{ english: 'gladiator', japanese: '剣闘士', level: 'advanced' },{ english: 'glance', japanese: 'ちらりと見る', level: 'advanced' },{ english: 'gland', japanese: '腺（生体組織の）', level: 'advanced' },{ english: 'glare', japanese: 'ぎらぎら光る、にらみつける', level: 'advanced' },{ english: 'glass', japanese: 'ガラス、コップ', level: 'advanced' },{ english: 'glasses', japanese: '眼鏡', level: 'advanced' },{ english: 'glaze', japanese: 'に上薬をかける、つや出し', level: 'advanced' },{ english: 'gleam', japanese: 'かすかな光、きらめく', level: 'advanced' },{ english: 'glean', japanese: 'を少しずつ集める', level: 'advanced' },{ english: 'glee', japanese: '歓喜、大喜び', level: 'advanced' },{ english: 'glen', japanese: '狭い谷', level: 'advanced' },{ english: 'glib', japanese: '口達者な、軽薄な', level: 'advanced' },{ english: 'glide', japanese: '滑空する、滑るように進む', level: 'advanced' },{ english: 'glimmer', japanese: 'ちらちら光る', level: 'advanced' },{ english: 'glimpse', japanese: 'をちらりと見る、一瞥', level: 'advanced' },{ english: 'glint', japanese: 'きらめき、きらきら光る', level: 'advanced' },{ english: 'glisten', japanese: 'きらきら輝く（水分で）', level: 'advanced' },{ english: 'glitch', japanese: '小さな欠陥、誤作動', level: 'advanced' },{ english: 'glitter', japanese: '輝く、きらめき', level: 'advanced' },{ english: 'gloat', japanese: 'ほくほく眺める、にやにや喜ぶ', level: 'advanced' },{ english: 'global', japanese: '世界的な、地球規模の', level: 'advanced' },{ english: 'globe', japanese: '地球、球体', level: 'advanced' },{ english: 'gloom', japanese: '憂鬱、暗がり', level: 'advanced' },{ english: 'gloomy', japanese: '薄暗い、憂鬱な', level: 'advanced' },{ english: 'glorify', japanese: 'を賛美する、称える', level: 'advanced' },{ english: 'glorious', japanese: '輝かしい、栄光ある', level: 'advanced' },{ english: 'glory', japanese: '栄光', level: 'advanced' },{ english: 'gloss', japanese: '光沢、つや', level: 'advanced' },{ english: 'glossary', japanese: '用語辞典、用語集', level: 'advanced' },{ english: 'glossy', japanese: '光沢のある', level: 'advanced' },{ english: 'glove', japanese: '手袋', level: 'advanced' },{ english: 'glow', japanese: '白熱する、輝き', level: 'advanced' },{ english: 'glower', japanese: 'にらみつける（gl）', level: 'advanced' },{ english: 'glucose', japanese: 'ブドウ糖', level: 'advanced' },{ english: 'glue', japanese: '接着剤、を接着する', level: 'advanced' },{ english: 'glut', japanese: 'を供給過剰にする', level: 'advanced' },{ english: 'glutton', japanese: '大食漢', level: 'advanced' },{ english: 'gnarled', japanese: '節だらけの、ねじくれた', level: 'advanced' },{ english: 'gnash', japanese: '歯ぎしりする', level: 'advanced' },{ english: 'gnat', japanese: 'ブヨ、ブユ（昆虫）', level: 'advanced' },{ english: 'gnaw', japanese: 'かじる、骨をかじる', level: 'advanced' },{ english: 'gnome', japanese: '地中の精、ノーム', level: 'advanced' },{ english: 'goal', japanese: '目標、ゴール', level: 'advanced' },{ english: 'goat', japanese: '山羊（ヤギ）', level: 'advanced' }];let currentFilter = 'all';let quizQuestions = [];let currentIndex = 0;let score = 0;let isAnswered = false;// レベルフィルター切り替え（修正版）function setFilter(level) {currentFilter = level;// 全てのボタンから selected クラスを外すdocument.getElementById('btn-all').classList.remove('selected');document.getElementById('btn-basic').classList.remove('selected');document.getElementById('btn-intermediate').classList.remove('selected');document.getElementById('btn-advanced').classList.remove('selected');// 選択されたボタンを光らせるdocument.getElementById(btn-${level}).classList.add('selected');// 最大表示数の制限を自動計算const filteredCount = wordDatabase.filter(w => level === 'all' || w.level === level).length;const input = document.getElementById('question-count');input.max = filteredCount;if (parseInt(input.value) > filteredCount || parseInt(input.value) === 0) {input.value = Math.min(10, filteredCount);}}// クイズ開始function startQuiz() {const inputCount = parseInt(document.getElementById('question-count').value);// 選択されたレベルでフィルタリングlet pool = wordDatabase.filter(w => currentFilter === 'all' || w.level === currentFilter);if (pool.length === 0) {alert('対象の単語が見つかりませんニャ。');return;}// 問題数制限const finalCount = Math.min(inputCount, pool.length);if (isNaN(finalCount) || finalCount <= 0) {alert('正しい問題数を入力してニャ！');return;}// シャッフルして問題を抽出shuffleArray(pool);quizQuestions = pool.slice(0, finalCount);currentIndex = 0;score = 0;// 画面切り替えdocument.getElementById('home-screen').classList.remove('active');document.getElementById('quiz-screen').classList.add('active');showQuestion();}// 問題表示function showQuestion() {isAnswered = false;const currentQuestion = quizQuestions[currentIndex];document.getElementById('progress-text').innerText = ${currentIndex + 1} / ${quizQuestions.length}問目;document.getElementById('question-text').innerText = currentQuestion.japanese;let options = [currentQuestion.english];let allEnglishWords = wordDatabase.map(w => w.english);while (options.length < 4) {let randomWord = allEnglishWords[Math.floor(Math.random() * allEnglishWords.length)];if (!options.includes(randomWord)) {options.push(randomWord);}}shuffleArray(options);const buttons = document.querySelectorAll('.option-btn');buttons.forEach((btn, index) => {btn.innerText = options[index];btn.className = 'option-btn';btn.disabled = false;if (options[index] === currentQuestion.english) {btn.dataset.correct = "true";} else {btn.dataset.correct = "false";}});}// 判定処理function checkAnswer(selectedIndex) {if (isAnswered) return;isAnswered = true;const buttons = document.querySelectorAll('.option-btn');const selectedButton = buttons[selectedIndex];if (selectedButton.dataset.correct === "true") {selectedButton.classList.add('correct');score++;} else {selectedButton.classList.add('incorrect');buttons.forEach(btn => {if (btn.dataset.correct === "true") {btn.classList.add('correct');}});}buttons.forEach(btn => btn.disabled = true);setTimeout(() => {currentIndex++;if (currentIndex < quizQuestions.length) {showQuestion();} else {showResult();}}, 1200);}// 結果表示function showResult() {document.getElementById('quiz-screen').classList.remove('active');document.getElementById('result-screen').classList.add('active');document.getElementById('result-score-text').innerText = ${quizQuestions.length}問中 ${score}問正解！;let comment = '';const rate = score / quizQuestions.length;if (rate === 1) {comment = 'カンペキニャ！素晴らしいニャン！🐾';} else if (rate >= 0.8) {comment = 'すごいニャ！その調子でがんばるニャ！✨';} else if (rate >= 0.5) {comment = '半分以上あってるニャ！あともう一息ニャ。🐾';} else {comment = 'これからニャ！何度も挑戦して覚えるニャ。🐱';}document.getElementById('result-comment').innerText = comment;}// ホームに戻る（アラート付き）function confirmGoHome() {if (confirm('データが消えるけど大丈夫かニャ？')) {showHomeScreen();}}// ホーム画面を表示function showHomeScreen() {document.getElementById('quiz-screen').classList.remove('active');document.getElementById('result-screen').classList.remove('active');document.getElementById('home-screen').classList.add('active');}// 配列のシャッフルfunction shuffleArray(array) {for (let i = array.length - 1; i > 0; i--) {const j = Math.floor(Math.random() * (i + 1));[array[i], array[j]] = [array[j], array[i]];}}
